@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" crossorigin="anonymous">
+    <title>Source List</title>
+</head>
+
+<body>
+    <div class="container" ng-controller="AppCtrl">
+        <h1 class="text-center text-primary">Source List</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Source Id</th>
+                    <th>Souece Name</th>
+                    <th>Priority</th>
+                    <th>Country</th>
+                    <th>Modify Time</th>
+                    <th>Create Time</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input class="form-control" ng-model="source.name"></td>
+                    <td><input class="form-control" ng-model="source.sourdeId"></td>
+                    <td><input class="form-control" ng-model="source.priority"></td>
+                    <td><input class="form-control" ng-model="source.country"></td>
+                    <td><button class="btn btn-primary btn-lg" ng-click="addSource()" data-toggle="modal" data-target="#myModal">Add Source</button></td>
+                    <td><button class="btn btn-info" ng-click="update()">Update</button>&nbsp;&nbsp;<button class="btn btn-info" ng-click="deselect()">Clear</button></td>
+                </tr>
+                <tr ng-repeat="source in sourceList">
+                    <td><b>{{source.name}}</b></td>
+                    <td>{{source.sourdeId}}</td>
+                    <td>{{source.priority}}</td>
+                    <td>{{source.country}}</td>
+                    <td><button class="btn btn-danger" ng-click="removeSource(source._id)">Remove</button></td>
+                    <td><button class="btn btn-warning" ng-click="editSource(source._id)">Edit</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+<script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+<script src="/controllers/controller.js"></script>
+
+</html>
