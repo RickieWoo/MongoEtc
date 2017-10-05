@@ -30,7 +30,7 @@ myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
         });
     };
     $scope.update = function(id) {
-        console.log($scope.source._id);
+        console.log($scope.source._id + "is updating");
         $http.put('/sourceList/' + $scope.source._id, $scope.source).success(function(response) {
             refresh();
         });
@@ -39,3 +39,17 @@ myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
         $scope.source = "";
     };
 }]);
+$(document).on('click', '#editBtn', function() {
+    console.log("aaaaaaaaa");
+    $(".changeAction h4").text("Source Edit");
+    $(".modal-footer .btn-primary").attr("ng-click", "update()");
+    $(".modal-footer .btn-primary").attr("id", "updateBtn");
+    $(".modal-footer .btn-primary").text("update");
+});
+$(document).on('click', '#addBtn', function() {
+    $(".changeAction h4").text("Source Add");
+    console.log("sss");
+    $(".modal-footer .btn-primary").text("submit");
+    $(".modal-footer .btn-primary").bind("ng-click", addSource);
+
+});

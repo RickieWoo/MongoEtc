@@ -1,12 +1,13 @@
 var express = require('express');
 var mongojs = require('mongojs');
 var bodyParser = require('body-parser');
-
 var app = express();
 var db = mongojs('sourceList', ['sourceList']);
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })) //将表单数据格式化
+
 app.get('/sourceList', function(req, res) {
     console.log('I get a req');
     // find everything
@@ -34,7 +35,8 @@ app.delete('/sourceList/:id', function(req, res) {
 //edit data
 app.get('/sourceList/:id', function(req, res) {
     var id = req.params.id;
-    console.log(id + "----------------------");
+    console.log(req.params);
+    console.log(id + "--------ed--------------");
     db.sourceList.findOne({ _id: mongojs.ObjectId(id) }, function(err, docs) {
         res.json(docs);
     });
