@@ -13,7 +13,7 @@
         <h1 class="text-center text-primary">Source List</h1>
         <tr>
             <td><button class="btn btn-primary" data-toggle="modal" data-target="#myModal" id="addBtn">Add Source</button></td>
-            <td><button class="btn btn-info" ng-click="update()">Update</button></td>
+            <!-- <td><button class="btn btn-info" ng-click="update()">Update</button></td> -->
         </tr>
         <table class="table">
             <thead>
@@ -22,8 +22,8 @@
                     <th>Souece Name</th>
                     <th>Priority</th>
                     <th>Country</th>
-                    <th>Modify Time</th>
-                    <th>Create Time</th>
+                    <!-- <th>Modify Time</th>
+                    <th>Create Time</th> -->
                     <th>Action</th>
                 </tr>
             </thead>
@@ -34,6 +34,8 @@
                     <td>{{source.sourdeId}}</td>
                     <td>{{source.priority}}</td>
                     <td>{{source.country}}</td>
+                    <!-- <td>{{source.modifyTime}}</td>
+                    <td>{{source.createTime}}</td> -->
                     <td><button class="btn btn-danger" ng-click="removeSource(source._id)">Remove</button></td>
                     <td><button class="btn btn-warning" id="editBtn" data-toggle="modal" data-target="#myModal2" ng-click="editSource(source._id)">Edit</button></td>
 
