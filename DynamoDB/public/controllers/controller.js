@@ -19,12 +19,12 @@ myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.removeMovies = function() {
         console.log("is going to be deleted");
         $http.delete('/Movies', $scope.movie).success(function() {
-            console.log("$scope.removMovies ");
+            console.log("$scope.removMovies !!");
         });
         refresh();
     };
     $scope.editMovies = function() {
-        //console.log(id + ' is editting');
+        //console.log(id + ' is edi tting');
         $http.get('/Movies', $scope.movie).success(function(res) {
             $scope.movie = res;
         });
