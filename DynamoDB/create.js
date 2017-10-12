@@ -1,4 +1,3 @@
-// amazon dynamo db add entry to a table using node.js 
 var AWS = require("aws-sdk");
 
 AWS.config.update({
@@ -6,30 +5,26 @@ AWS.config.update({
     endpoint: "http://localhost:8000"
 });
 
-var docClient = new AWS.DynamoDB.DocumentClient();
-
-var table = "Movies";
-
-var year = 2015;
-var title = "The Big New Movie";
+var dynamodb = new AWS.DynamoDB();
 
 var params = {
-    TableName: table,
-    Item: {
-        "year": year,
-        "title": title,
-        "info": {
-            "plot": "Nothing happens at all.",
-            "rating": 0
-        }
+    TableName: "Sources",
+    KeySchema: [
+        { AttributeName: "id", KeyType: "HASH" }, //Partition key
+    ],
+    AttributeDefinitions: [
+        { AttributeName: "id", AttributeType: "S" },
+    ],
+    ProvisionedThroughput: {
+        ReadCapacityUnits: 10,
+        WriteCapacityUnits: 10
     }
 };
 
-console.log("Adding a new item...");
-docClient.put(params, function(err, data) {
+dynamodb.createTable(params, function(err, data) {
     if (err) {
-        console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+        console.error("Unable to create table. Error JSON:", JSON.stringify(err, null, 2));
     } else {
-        console.log("Added item:", JSON.stringify(data, null, 2));
+        console.log("Created table. Table description JSON:", JSON.stringify(data, null, 2));
     }
 });
