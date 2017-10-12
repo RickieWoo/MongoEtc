@@ -2,27 +2,22 @@
 var express = require('express');
 var AWS = require("aws-sdk");
 var bodyParser = require('body-parser');
-
-// var dynamodb = new AWS.DynamoDB({
-//     endpoint: 'http://localhost:8000',
-//     region: 'us-east-2',
-//     accessKeyId: 'AKIAJMKILRB6JVEBYMVQ',
-//     secretAccessKey: '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'
-// });
+var uuid = require('uuid');
 
 AWS.config.update({
     region: "us-west-2",
     endpoint: "http://localhost:8000"
 });
+
 var app = express();
 var docClient = new AWS.DynamoDB.DocumentClient();
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })) //将表单数据格式化
 
-app.get('/Movies', function(req, res) {
+app.get('/Sources', function(req, res) {
     console.log('I get a req');
-    var table = "Movies";
+    var table = "Sources";
     var params = {
         TableName: table,
     };
@@ -36,18 +31,19 @@ app.get('/Movies', function(req, res) {
     });
 });
 //post data
-app.post('/Movies', function(req, res) {
-    var table = "Movies";
-    var year = req.body.year;
-    year = Number(year);
+app.post('/Sources', function(req, res) {
+    var table = "Sources";
+    var id = uuid.v1();
     var title = req.body.title;
     var info = req.body.info;
+    var country = req.body.country;
     var params = {
         TableName: table,
         Item: {
-            "year": year,
+            "id": id,
             "title": title,
-            "info": info
+            "info": info,
+            "country": country
         }
     };
 
@@ -63,16 +59,14 @@ app.post('/Movies', function(req, res) {
 
 });
 //delete data 
-app.delete('/Movies', function(req, res) {
-    var table = "Movies";
-    var title = "The Big New Movie";
-
-    console.log(JSON.stringify(req.body.year, null, 2))
+app.delete('/Sources/:id', function(req, res) {
+    var table = "Sources";
+    var id = req.params.id;
+    console.log(id + req.body.id);
     var params = {
         TableName: table,
         Key: {
-            "year": 123,
-            "title": "s"
+            "id": id,
         }
     };
     console.log("Attempting a conditional delete...");
@@ -86,23 +80,22 @@ app.delete('/Movies', function(req, res) {
 });
 
 //update data
-app.put('/Movies', function(req, res) {
+app.put('/Sources/:id', function(req, res) {
 
-    var table = "Movies";
-    var year = req.body.year;
-    year = Number(year);
-    var title = req.body.title;
-    // Update the item, unconditionally,
+    var table = "Sources";
+    var id = req.params.id;
 
     var params = {
         TableName: table,
         Key: {
-            "year": year,
-            "title": title
+            "id": id,
         },
-        UpdateExpression: "set info = :i",
+
+        UpdateExpression: "set info = :i,title=:t,country=:c",
         ExpressionAttributeValues: {
-            ":i": req.body.info
+            ":i": req.body.info,
+            ":t": req.body.title,
+            ":c": req.body.country
         },
         ReturnValues: "UPDATED_NEW"
 
@@ -118,15 +111,16 @@ app.put('/Movies', function(req, res) {
         }
     });
 });
-app.get('/Movies', function(req, res) {
+//todo
+app.get('/Sources/:id', function(req, res) {
     var params = {
-        TableName: "Movies",
+        TableName: "Sources",
         KeyConditionExpression: "#yr = :yyyy",
         ExpressionAttributeNames: {
-            "#yr": "year"
+            "#yr": "id"
         },
         ExpressionAttributeValues: {
-            ":yyyy": Number(req.body.year)
+            ":yyyy": (req.params.id)
         }
     };
 
@@ -136,7 +130,7 @@ app.get('/Movies', function(req, res) {
         } else {
             console.log("Query succeeded.");
             data.Items.forEach(function(item) {
-                console.log(" -", item.year + ": " + item.title);
+                res.json(item);
             });
         }
     });
