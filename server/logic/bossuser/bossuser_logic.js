@@ -67,14 +67,13 @@ exports.getUser = function (params) {
         BossUserDB.getUserByName(params.user_name)
         .then(result => {
             let user = result.Item;
-
             if (IsEmpty(user)) {
                 reject(ResponseErrorSet.createResponseError(ResponseErrorSet.BossUserErrorSet.USER_NAME_NOT_EXIST));
             } else {
                 delete user.password;
                 delete user.update_timestamp;
                 delete user.update_date_time;
-                user.auth = JSON.parse(user.auth);
+                // user.auth = JSON.parse(user.auth);
                 resolve(user);
             }
         })
@@ -116,23 +115,30 @@ exports.getUserList = function (params) {
         })
     });
 }
+
 exports.newUser = function (params) {
     return new Promise((resolve, reject) => {
-        if(getUserByName(params)!=null){
-            reject(ResponseErrorSet.createResponseError(ResponseErrorSet.BossUserErrorSet.USER_ALREADY_EXIST));
-        }
         _validateUserParams(params)
-            .then(userItem => {
-                return BossUserDB.addUser(userItem);
-            })
-            .then(userItem => {
-                resolve({
-                        user_name: userItem.user_name
+            .then(validateParams => {
+               BossUserDB.getUserByName(validateParams.user_name)
+                .then(result => {
+                    if(!IsEmpty(result)){
+                        debug(`[add] User already exists`);
+                        reject(ResponseErrorSet.createResponseError(ResponseErrorSet.BossUserErrorSet.USER_ALREADY_EXIST));
+                    } else {
+                        return BossUserDB.addUser(validateParams);
+                    }
+                })
+                .then(userItem => {
+                    resolve({
+                            user_name: userItem.user_name
+                    });
+                })
+                .catch(err => {
+                    reject(err);
                 });
             })
-            .catch(err => {
-                reject(err);
-            });
+            
     });
 };
 

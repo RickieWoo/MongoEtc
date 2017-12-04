@@ -161,7 +161,7 @@ describe('Boss Users Add: ', function(){
 		chai.request(requestUrl)
 			.put('/bossuser/newuser')
 			.send({
-				user_name: 'test_user_b',
+				user_name: 'test_user',
 				password: '123454',
 				auth:{
 					VERSION: "2017-09-27",
