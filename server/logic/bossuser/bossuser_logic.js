@@ -1,3 +1,4 @@
+
 /**
  * Created by Ruozi on 8/11/17.
  */
@@ -82,7 +83,7 @@ exports.getUser = function (params) {
         });
 
     });
-}
+};
 
 exports.getUserList = function (params) {
     return new Promise((resolve, reject) => {
@@ -114,7 +115,7 @@ exports.getUserList = function (params) {
             reject(err);
         })
     });
-}
+};
 
 exports.newUser = function (params) {
     return new Promise((resolve, reject) => {
@@ -142,6 +143,62 @@ exports.newUser = function (params) {
     });
 };
 
+exports.updateUser = function (params) {
+    return new Promise((resolve, reject) => {
+        _validateNameParams(params)
+            .then(validateParams => {
+               BossUserDB.getUserByName(validateParams.user_name)
+                .then(result => {
+                    if(IsEmpty(result)){
+                        debug(`[update] User is not exists`);
+                        reject(ResponseErrorSet.createResponseError(ResponseErrorSet.BossUserErrorSet.USER_NAME_NOT_EXIST));
+                    } else {
+                        return BossUserDB.updateUser(validateParams);
+                    }
+                })
+                .then(userItem => {
+                    resolve({
+                            user_name: userItem.user_name
+                    });
+                })
+                .catch(err => {
+                    reject(err);
+                });
+            })
+            
+    });
+};
+
+exports.deleteUser = function (params) {
+    return new Promise((resolve, reject) => {
+        if (IsEmpty(params.user_name)) {
+            debug(`no params in url, please try again`);
+            reject(ResponseErrorSet.createResponseError(ResponseErrorSet.BossUserErrorSet.USER_PARAMS_ERROR));
+        }
+        BossUserDB.getUserByName(params.user_name)
+        .then(validateParams => {
+            if(IsEmpty(validateParams)){
+                debug(`[delete] User is not exists`);
+                reject(ResponseErrorSet.createResponseError(ResponseErrorSet.BossUserErrorSet.USER_NAME_NOT_EXIST));
+            } else {
+                return BossUserDB.deleteUser(validateParams);
+            }
+        })
+        .then(result => {
+            let user = result.Item;
+            if (IsEmpty(user)) {
+                reject(ResponseErrorSet.createResponseError(ResponseErrorSet.BossUserErrorSet.USER_NAME_NOT_EXIST));
+            } else {
+                resolve(user.user_name);
+            }
+        })
+        .catch(err => {
+            debug(`[Bossuser] delete user => ${JSON.stringify(err, null, 2)}`);
+            reject(err);
+        });
+
+    });
+}
 function _getUser(params) {
     return new Promise((resolve, reject) => {
         if (!IsEmpty(params.session.user)) {
@@ -174,18 +231,6 @@ function _getUser(params) {
     });
 };
 
-function _updateUser (params) {
-    
-};
-    
-function _deleteUser (params) {
-
-};
-
-function _getAllUser (params) {
-    
-};
-    
 function _validateLoginParams(params) {
     return new Promise((resolve, reject) => {
 
@@ -209,7 +254,7 @@ function _validateLoginParams(params) {
             }
         });
     });
-}
+};
 
 function _validateNameParams(params) {
     return new Promise((resolve, reject) => {
@@ -232,7 +277,8 @@ function _validateNameParams(params) {
             }
         });
     });
-}
+};
+
 function _validateUserParams(params) {
     return new Promise((resolve, reject) => {
 
@@ -256,4 +302,4 @@ function _validateUserParams(params) {
             }
         });
     });
-}
+};

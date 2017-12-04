@@ -173,7 +173,7 @@ describe('Boss Users Add: ', function(){
 				}
 			})
 			.end((res,err) => {
-				debug(JSON.stringify(err.stack, null, 2));
+				debug(JSON.stringify(err, null, 2));
 				expect(err).to.have.status(ResponseErrorSet.BossUserErrorSet.USER_ALREADY_EXIST.status);
 				done();
 			});
@@ -181,58 +181,58 @@ describe('Boss Users Add: ', function(){
 
 });
 
-// describe('Boss Users Update：', function(){
-// 	this.timeout(15000);
+describe('Boss Users Update：', function(){
+	this.timeout(15000);
 
-// 	it('should update a user ', done =>{
-// 		chai.request(requestUrl)
-// 			.post('/bossuser/updateuser')
-// 			.send({
-// 				user_name: bossUserData.user_name,
-// 				password: '123454',
-// 				auth:{
-// 					VERSION: "2070-02-10",
-// 					ACTION: ['*'],
-// 					RESOURCE: [	
-// 						"order/*",
-// 						"user/*"
-// 					]
-// 				}
-// 			})
-// 			.then(res => {
-// 				expect(res).to.have.status(200);
-// 				expect(res.body).to.be.jsonSchema(returnSchema);
-// 				debug(JSON.stringify(res.body, null, 2));
-// 				done();
-// 			})
-// 			.catch(err => {
-// 				done(err);
-// 			});
-// 	});
+	it('should update a user ', done =>{
+		chai.request(requestUrl)
+			.post('/bossuser/updateuser')
+			.send({
+				user_name: 'test_user_a',
+				password: '123454',
+				auth:{
+					VERSION: "2070-02-10",
+					ACTION: ['*'],
+					RESOURCE: [	
+						"order/*",
+						"user/*"
+					]
+				}
+			})
+			.then(res => {
+				expect(res).to.have.status(200);
+				expect(res.body).to.be.jsonSchema(returnSchema);
+				debug(JSON.stringify(res.body, null, 2));
+				done();
+			})
+			.catch(err => {
+				done(err);
+			});
+	});
 
-// 	it('should update a user who not exists and return ERROR', done =>{
-// 		chai.request(requestUrl)
-// 			.post('/bossuser/updateuser')
-// 			.send({
-// 				user_name: 'test_user_not_exist',
-// 				password: '123454',
-// 				auth:{
-// 					VERSION: "2017-09-27",
-// 					ACTION: ['*'],
-// 					RESOURCE: [	
-// 						"order/*",
-// 						"user/*"
-// 					]
-// 				}
-// 			})
-// 			.end((res,err) => {
-// 				expect(err).to.have.status(ResponseErrorSet.BossUserErrorSet.USER_NAME_NOT_EXIST.status);
-// 				debug(JSON.stringify((err), null, 2));
-// 				done();
-// 			});
-// 	});
+	it('should update a user who not exists and return ERROR', done =>{
+		chai.request(requestUrl)
+			.post('/bossuser/updateuser')
+			.send({
+				user_name: 'test_user_not_exist',
+				password: '123454',
+				auth:{
+					VERSION: "2017-09-27",
+					ACTION: ['*'],
+					RESOURCE: [	
+						"order/*",
+						"user/*"
+					]
+				}
+			})
+			.end((res,err) => {
+				expect(err).to.have.status(ResponseErrorSet.BossUserErrorSet.USER_NAME_NOT_EXIST.status);
+				debug(JSON.stringify((err), null, 2));
+				done();
+			});
+	});
 
-// });
+});
 
 describe('Boss Users Get:', function(){
 	this.timeout(15000);
@@ -269,50 +269,50 @@ describe('Boss Users Get:', function(){
 
 });
 
-// describe('Boss Users Delete：', function(){
-// 	this.timeout(15000);
+describe('Boss Users Delete：', function(){
+	this.timeout(15000);
 
-// 	it('should delete a user ', done =>{
-// 		chai.request(requestUrl)
-// 			.delete('/bossuser/deleteuser')
-// 			.send({
-// 				user_name: bossUserData.user_name,
-// 			})
-// 			.then(res => {
-// 				expect(res).to.have.status(200);
-// 				expect(res.body).to.be.jsonSchema(returnSchema);
-// 				done();
-// 			})
-// 			.catch(err => {
-// 				done(err);
-// 			});
-// 	});
+	it('should delete a user ', done =>{
+		chai.request(requestUrl)
+			.delete('/bossuser/deleteuser')
+			.send({
+				user_name: 'test_user_a',
+			})
+			.then(res => {
+				expect(res).to.have.status(200);
+				expect(res.body).to.be.jsonSchema(returnSchema);
+				done();
+			})
+			.catch(err => {
+				done(err);
+			});
+	});
 
-// 	it('should delete a user who not exists and return ERROR', done =>{
-// 		chai.request(requestUrl)
-// 			.delete('/bossuser/deleteuser')
-// 			.send({
-// 				user_name: 'test_user_not_exist'
-// 			})
-// 			.end((res,err) => {
-// 				expect(err).to.have.status(ResponseErrorSet.BossUserErrorSet.USER_NAME_NOT_EXIST.status);
-// 				debug(JSON.stringify((err), null, 2));
-// 				done();
-// 			});
-// 	});
+	it('should delete a user who not exists and return ERROR', done =>{
+		chai.request(requestUrl)
+			.delete('/bossuser/deleteuser')
+			.send({
+				user_name: 'test_user_not_exist'
+			})
+			.end((res,err) => {
+				expect(err).to.have.status(ResponseErrorSet.BossUserErrorSet.USER_NAME_NOT_EXIST.status);
+				debug(JSON.stringify((err), null, 2));
+				done();
+			});
+	});
  
-// 	// todo
-// 	it('should delete a admin return ERROR', done =>{
-// 		chai.request(requestUrl)
-// 			.delete('/bossuser/deleteuser')
-// 			.send({
-// 				user_name: 'admin'
-// 			})
-// 			.end((res,err) => {
-// 				expect(err).to.have.status(ResponseErrorSet.BossUserErrorSet.USER_NAME_NOT_EXIST.status);
-// 				debug(JSON.stringify((err), null, 2));
-// 				done();
-// 			});
-// 	});
+	// // todo
+	// it('should delete a admin return ERROR', done =>{
+	// 	chai.request(requestUrl)
+	// 		.delete('/bossuser/deleteuser')
+	// 		.send({
+	// 			user_name: 'admin'
+	// 		})
+	// 		.end((res,err) => {
+	// 			expect(err).to.have.status(ResponseErrorSet.BossUserErrorSet.USER_NAME_NOT_EXIST.status);
+	// 			debug(JSON.stringify((err), null, 2));
+	// 			done();
+	// 		});
+	// });
  
-// });
+});

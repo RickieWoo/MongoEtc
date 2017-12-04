@@ -75,13 +75,22 @@ router.get('/user' , (req , res , next) => {
 		});
 });
 
-// router.put('/updateuser' , (req , res , next) => {
-//     let params = {
-//         user_name: req.body.user_name,
-//         password: res.body.password,
-//         auth: res.body.auth
-//     };
-// });
+router.post('/updateuser' , (req , res , next) => {
+    let params = {
+        user_name: req.body.user_name,
+        password: req.body.password,
+        auth: req.body.auth
+		};
+		BossUser.updateUser(params)
+		.then(data => {
+				debug(`[delete] delete user => ${JSON.stringify(res.body, null, 2)}`);
+				res.json(data);
+		})
+		.catch(err => {
+				logger.error(`[delete] detele user error => ${JSON.stringify(err.stack, null ,2)}`);
+				next(err);
+		});
+});
 
 router.put('/newuser' , (req , res , next) => {
     let params = {
@@ -89,7 +98,7 @@ router.put('/newuser' , (req , res , next) => {
         password: req.body.password,
         auth: req.body.auth
     };
-	debug(`login session before => ${JSON.stringify(req.body, null, 2)}`);
+		debug(`login session before => ${JSON.stringify(req.body, null, 2)}`);
     BossUser.newUser(params)
         .then(data => {
             debug(`[post] new user => ${JSON.stringify(res.body, null, 2)}`);
@@ -101,10 +110,19 @@ router.put('/newuser' , (req , res , next) => {
         });
 });
 
-// router.delete('/deleteuser' , (req , res , next) => {
-//     let params: {
-//         user_name = req.query.user_name,
-//     };
-// });
+router.delete('/deleteuser' , (req , res , next) => {
+    let params = {
+        user_name : req.query.user_name,
+    };
+		BossUser.deleteUser(params)
+		.then(data => {
+				debug(`[delete] delete user => ${JSON.stringify(res.body, null, 2)}`);
+				res.json(data);
+		})
+		.catch(err => {
+				logger.error(`[delete] detele user error => ${JSON.stringify(err.stack, null ,2)}`);
+				next(err);
+		});
+});
 
 module.exports = router;

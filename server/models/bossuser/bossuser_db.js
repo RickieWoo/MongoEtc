@@ -47,7 +47,7 @@ exports.getUserByName = function (userName) {
 
 exports.addUser = function (userItem) {
     
-    if (IsEmpty(userItem.user_name)) {
+		if (IsEmpty(userItem.user_name || userItem.password || userItem.auth)) {
         return Promise.reject(InternalErrorSet.createInternalError(InternalErrorSet.ErrorSet.DB_OPERATION_PARAM_MISSING));
     }
 
@@ -57,6 +57,34 @@ exports.addUser = function (userItem) {
     };
 
     return table.put(params).promise();
+};
+
+exports.updateUser = function (userItem) {
+	
+	if (IsEmpty(userItem.user_name)) {
+			return Promise.reject(InternalErrorSet.createInternalError(InternalErrorSet.ErrorSet.DB_OPERATION_PARAM_MISSING));
+	}
+
+	let params = {
+			TableName: tableName,
+			Item: userItem,
+	};
+
+	return table.put(params).promise();
+};
+
+exports.deleteUser = function (userName) {
+	
+	if (IsEmpty(userName)) {
+			return Promise.reject(InternalErrorSet.createInternalError(InternalErrorSet.ErrorSet.DB_OPERATION_PARAM_MISSING));
+	}
+
+	let params = {
+			TableName: tableName,
+			user_name: userName
+	};
+
+	return table.delete(params).promise();
 };
 
 exports.getUserList = function (queryParams) {
