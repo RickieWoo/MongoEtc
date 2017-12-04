@@ -1,0 +1,14 @@
+{
+	"user_name": "test_user",
+  	"password": "123456",
+	"auth": {
+		"Version": "2017-08-11",
+      	"Action": [
+			"*"
+		],
+		"Resource": [
+			"order/*",
+			"user/*"
+		]
+	}
+}

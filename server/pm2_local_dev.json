@@ -1,0 +1,16 @@
+{
+  "name": "gift_boss_local_dev",
+  "script": "./bin/www",
+  "cwd": "./",
+  "error_file": "./logs/pm2/gift_boss-err.log",
+  "out_file": "./logs/pm2/gift_boss-out.log",
+  "log_date_format" : "MM-DD HH:mm:ss.SSS Z",
+  "instances": "1",
+  "merge_logs": true,
+  "exec_mode": "cluster_mode",
+  "port": 8010,
+  "env": {
+    "NODE_ENV": "local_dev",
+    "NODE_CONFIG_DIR": "./config"
+  }
+}
