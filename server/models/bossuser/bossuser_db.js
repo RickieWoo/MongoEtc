@@ -81,7 +81,9 @@ exports.deleteUser = function (userName) {
 
 	let params = {
 			TableName: tableName,
-			user_name: userName
+			Key: {
+			'user_name': userName,
+			}
 	};
 
 	return table.delete(params).promise();

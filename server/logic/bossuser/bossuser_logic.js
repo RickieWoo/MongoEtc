@@ -172,25 +172,24 @@ exports.updateUser = function (params) {
 exports.deleteUser = function (params) {
     return new Promise((resolve, reject) => {
         if (IsEmpty(params.user_name)) {
-            debug(`no params in url, please try again`);
+            debug(`[delete ]no params in url, please try again`);
             reject(ResponseErrorSet.createResponseError(ResponseErrorSet.BossUserErrorSet.USER_PARAMS_ERROR));
         }
         BossUserDB.getUserByName(params.user_name)
-        .then(validateParams => {
-            if(IsEmpty(validateParams)){
+        .then(userItem => {
+            let user = userItem.Item;
+            if(IsEmpty(user)){
                 debug(`[delete] User is not exists`);
                 reject(ResponseErrorSet.createResponseError(ResponseErrorSet.BossUserErrorSet.USER_NAME_NOT_EXIST));
             } else {
-                return BossUserDB.deleteUser(validateParams);
+                return BossUserDB.deleteUser(user.user_name);
             }
         })
-        .then(result => {
-            let user = result.Item;
-            if (IsEmpty(user)) {
-                reject(ResponseErrorSet.createResponseError(ResponseErrorSet.BossUserErrorSet.USER_NAME_NOT_EXIST));
-            } else {
-                resolve(user.user_name);
-            }
+        .then(userItem => {
+            let user = userItem.Item;
+            resolve({
+                user_name:userItem.user_name
+            });
         })
         .catch(err => {
             debug(`[Bossuser] delete user => ${JSON.stringify(err, null, 2)}`);
@@ -199,6 +198,7 @@ exports.deleteUser = function (params) {
 
     });
 }
+
 function _getUser(params) {
     return new Promise((resolve, reject) => {
         if (!IsEmpty(params.session.user)) {

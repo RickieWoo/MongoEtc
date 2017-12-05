@@ -116,7 +116,7 @@ router.delete('/deleteuser' , (req , res , next) => {
     };
 		BossUser.deleteUser(params)
 		.then(data => {
-				debug(`[delete] delete user => ${JSON.stringify(res.body, null, 2)}`);
+				debug(`[delete] delete user => ${JSON.stringify(res.body , null, 2)}`);
 				res.json(data);
 		})
 		.catch(err => {
