@@ -145,7 +145,7 @@ describe('Boss Users Delete：', function(){
 				user_name: 'test_user_not_exist'
 			})
 			.end((res,err) => {
-				expect(err).to.have.status(ResponseErrorSet.BossUserErrorSet.USER_NAME_NOT_EXIST.status);
+				expect(res).to.have.status(ResponseErrorSet.BossUserErrorSet.USER_NAME_NOT_EXIST.status);
 				debug(JSON.stringify((err), null, 2));
 				done();
 			});
