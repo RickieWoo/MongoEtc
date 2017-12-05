@@ -48,6 +48,7 @@ router.post('/logout' , (req , res , next) => {
 router.post('/userlist' , (req , res , next) => {
     let params = {
         limit: req.body.limit || BossUserSet.ListSet.LIMIT,
+        startKey: req.body.startKey,
     };
     BossUser.getUserList(params)
     .then(data => {

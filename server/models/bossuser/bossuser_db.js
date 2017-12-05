@@ -27,8 +27,10 @@ let InternalErrorSet = require('../../conf/internal_error_set');
 let config = require('../../conf/internal_error_set');
 let table = new AWS.DynamoDB.DocumentClient();
 let IsEmpty = require('is-empty');
+let bossUserSet = require('../../conf/bossuser_set')
 
 let tableName = 'gift_boss_user';
+
 exports.getUserByName = function (userName) {
 
 	if (IsEmpty(userName)) {
@@ -94,17 +96,8 @@ exports.getUserList = function (queryParams) {
 	let params = {
 			TableName: tableName,
 	};
-
-	params.Limit = parseInt(queryParams.limit) || config.DefaultDBQueryLimit;
-
-	if (!IsEmpty(queryParams.offset)) {
-			params.ExclusiveStartKey = {
-					[hashKey]: queryParams.user_name,
-			};
-	}
-	else if (queryParams.ExclusiveStartKey) {
-			params.ExclusiveStartKey = queryParams.ExclusiveStartKey;
-	}
+	params.Limit = queryParams.limit || bossUserSet.ListSet.LIMIT;
+	params.ExclusiveStartKey = queryParams.startKey;
 
 	return table.scan(params).promise();
 

@@ -13,6 +13,38 @@ chai.use(require('chai-json-schema'));
 
 const requestUrl = config.BaseUrl;
 
+let getSomeUserJsonSchema = {
+	type: 'object', 
+	required: ['users','nextKey'],
+	properties: {
+		users: {
+			type: 'array', 
+			items: {
+				type: 'object', 
+				required: [	'user_name','auth'],
+				properties: {
+					user_name: {type: 'string'},
+					auth: {
+						type: 'object', 
+						properties: {
+							Version: {type: 'string'}, 
+							Action: {
+								type: 'array', 
+								items: {type: 'string'}
+							}, 
+							Resource: {
+								type: 'array', 
+								items: {type: 'string'}
+							}  
+						}
+					}
+				}
+			}
+		},
+		nextKey: {type: 'object'}
+	},
+};
+
 let getAllUserJsonSchema = {
 	type: 'object', 
 	required: ['users'],
@@ -83,14 +115,47 @@ let returnSchema = {
 describe('Boss Users Get All: ', function(){
 	this.timeout(15000);
 
-	it('should Get all users ', done => {
+	it('should Get first gourp users ', done => {
 		chai.request(requestUrl)
 			.post('/bossuser/userlist')
 			.send({
 				limit: 2
 			})
 			.then(res => {
-				// debug(JSON.stringify(res.body, null, 2));
+				expect(res.body).to.be.jsonSchema(getSomeUserJsonSchema);
+				done();
+			})
+			.catch(err => {
+				debug(JSON.stringify(err, null, 2));
+				done(err);
+			});
+	});
+
+	it('should Get users by test_user', done => {
+		chai.request(requestUrl)
+			.post('/bossuser/userlist')
+			.send({
+				limit: 2,
+				startKey: {
+					user_name : 'test_user'
+				}
+			})
+			.then(res => {
+				expect(res.body).to.be.jsonSchema(getSomeUserJsonSchema);
+				done();
+			})
+			.catch(err => {
+				debug(JSON.stringify(err, null, 2));
+				done(err);
+			});
+	});
+
+	it('should Get all users ', done => {
+		chai.request(requestUrl)
+			.post('/bossuser/userlist')
+			.send({
+			})
+			.then(res => {
 				expect(res.body).to.be.jsonSchema(getAllUserJsonSchema);
 				done();
 			})
@@ -145,7 +210,7 @@ describe('Boss Users Delete：', function(){
 				user_name: 'test_user_not_exist'
 			})
 			.end((res,err) => {
-				expect(res).to.have.status(ResponseErrorSet.BossUserErrorSet.USER_NAME_NOT_EXIST.status);
+				expect(err).to.have.status(ResponseErrorSet.BossUserErrorSet.USER_NAME_NOT_EXIST.status);
 				debug(JSON.stringify((err), null, 2));
 				done();
 			});

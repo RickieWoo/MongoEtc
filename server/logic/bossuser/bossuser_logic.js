@@ -88,12 +88,9 @@ exports.getUser = function (params) {
 exports.getUserList = function (params) {
     return new Promise((resolve, reject) => {
     
-        BossUserDB.getUserList({
-            Limit: params.limit,
-            ExclusiveStartKey: params.startKey,
-        })
+        BossUserDB.getUserList( params)
         .then(BossUserDBQueryData => {
-
+            
             let userItems = BossUserDBQueryData.Items;
 
             debug(`query users => ${JSON.stringify(userItems, null, 2)}`);
@@ -101,8 +98,7 @@ exports.getUserList = function (params) {
             let formatteduserItems = userItems.map(item => {
                 delete item.password;
                 delete item.update_timestamp;
-                // delete item.update_date_time;
-                item.update_date_time = BossUserDBQueryData.LastEvaluatedKey
+                delete item.update_date_time;
                 return item;
             });
             resolve({
@@ -176,25 +172,25 @@ exports.deleteUser = function (params) {
             reject(ResponseErrorSet.createResponseError(ResponseErrorSet.BossUserErrorSet.USER_PARAMS_ERROR));
         }
         BossUserDB.getUserByName(params.user_name)
-        .then(userItem => {
-            let user = userItem.Item;
-            if(IsEmpty(user)){
-                debug(`[delete] User is not exists`);
-                reject(ResponseErrorSet.createResponseError(ResponseErrorSet.BossUserErrorSet.USER_NAME_NOT_EXIST));
-            } else {
-                return BossUserDB.deleteUser(user.user_name);
-            }
-        })
-        .then(userItem => {
-            let user = userItem.Item;
-            resolve({
-                user_name:userItem.user_name
+            .then(userItem => {
+                let user = userItem.Item;
+                if(IsEmpty(userItem)){
+                    debug(`[delete] User is not exists`);
+                    reject(ResponseErrorSet.createResponseError(ResponseErrorSet.BossUserErrorSet.USER_NAME_NOT_EXIST));
+                } else {
+                    return BossUserDB.deleteUser(user.user_name);
+                }
+            })
+            .then(userItem => {
+                let user = userItem.Item;
+                resolve({
+                    user_name:userItem.user_name
+                });
+            })
+            .catch(err => {
+                debug(`[Bossuser] delete user => ${JSON.stringify(err, null, 2)}`);
+                reject(err);
             });
-        })
-        .catch(err => {
-            debug(`[Bossuser] delete user => ${JSON.stringify(err, null, 2)}`);
-            reject(err);
-        });
 
     });
 }
