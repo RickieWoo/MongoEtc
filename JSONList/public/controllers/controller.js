@@ -29,6 +29,7 @@ myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
             $scope.source = res;
         });
     };
+    
     $scope.update = function(id) {
         console.log($scope.source._id + 'is updating');
         $http.put('/sourceList/' + $scope.source.id, $scope.source).success(function(response) {
